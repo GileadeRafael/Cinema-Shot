@@ -200,9 +200,9 @@ export default function App() {
     if (!scene.trim()) return;
     
     const directions = [
-      `STILL AUTHORITY: ${scene} capturado em uma composição arquitetônica de alto contraste, enfatizando a força do quadro e o momento congelado.`,
-      `SCENE TENSION: ${scene} com uma tensão narrativa cinematográfica, priorizando o movimento implícito e uma atmosfera densa.`,
-      `EDITORIAL CONCEPTUAL: ${scene} com estética de direção de arte editorial, foco em styling forte e iluminação artificial intencional.`
+      `STILL AUTHORITY: ${scene} em enquadramento estático rigoroso. Geometria brutalista, uso de espaço negativo para isolar o sujeito. Textura de superfície acentuada, luz direcional dura criando sombras gráficas. Estética de fotografia de arte contemporânea.`,
+      `SCENE TENSION: ${scene} sob luz de baixa chave (low-key). Atmosfera carregada de suspense, névoa volumétrica sutil. O sujeito é revelado por frestas de luz, criando um mistério narrativo. Profundidade de campo rasa focando no olhar.`,
+      `EDITORIAL NOIR: ${scene} com direção de arte de alta moda. Cores saturadas mas frias, contraste tonal agressivo. Composição dinâmica e assimétrica. Reflexos especulares em superfícies metálicas ou úmidas, visual ultra-estilizado.`
     ];
     
     setElevatedDirections(directions);
@@ -285,9 +285,9 @@ NO TEXT. NO WATERMARK. NO LOGO. CORRECT ANATOMY. NO EXTRA DIGITS. NO PLASTIC HDR
 
   const handleUnfold = () => {
     const directions = [
-      `REACTION SHOT: Um close-up dramático focado na expressão do sujeito reagindo à cena anterior, capturando a resposta emocional imediata.`,
-      `WIDE ESTABLISHING: Um plano geral revelando a imensidão do cenário e a posição do sujeito no ambiente vasto.`,
-      `DETAIL INSERT: Um plano detalhe macro em um elemento crucial da cena, destacando texturas, materiais e micro-detalhes.`
+      `REACTION SHOT (INTERNALITY): Close-up extremo nos olhos do sujeito. A pupila dilata, capturando o reflexo da cena anterior. Micro-expressões faciais revelam uma mudança interna profunda. Foco crítico na íris, pele com textura hiper-realista.`,
+      `WIDE ESTABLISHING (ISOLATION): Plano geral aberto (Extreme Wide Shot). O sujeito torna-se uma silhueta diminuta contra a vastidão do cenário. Perspectiva atmosférica criando camadas de profundidade. O ambiente agora é o protagonista, engolindo a ação anterior.`,
+      `DETAIL INSERT (MATERIALITY): Plano detalhe macro em um objeto ou superfície tocada pelo sujeito. Poeira flutuando em um raio de luz, desgaste do material, impressões digitais. A câmera explora a materialidade do mundo, trazendo uma dimensão tátil à narrativa.`
     ];
     
     setUnfoldDirections(directions);
