@@ -201,7 +201,13 @@ export default function App() {
     
     setIsImproving(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
+        alert("Erro: GEMINI_API_KEY não configurada. Se você estiver no Vercel, adicione esta variável de ambiente nas configurações do projeto.");
+        setIsImproving(false);
+        return;
+      }
+      const ai = new GoogleGenAI({ apiKey });
       const systemInstruction = `Sua função não é gerar prompts.
 Sua função é reinterpretar, reenquadrar e elevar qualquer input criativo em direções visuais estruturadas.
 
@@ -375,17 +381,22 @@ CONTEXTO TÉCNICO ATUAL:
     
     if (referenceImage) {
       try {
-        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-        const analysisResponse = await ai.models.generateContent({
-          model: "gemini-3-flash-preview",
-          contents: {
-            parts: [
-              { inlineData: { data: referenceImage.data, mimeType: referenceImage.mimeType } },
-              { text: "Analyze the visual style of this image for a cinematic prompt. Focus on: 1) Color grading and palette, 2) Film grain and texture, 3) Saturation levels, 4) Historical era or aesthetic period (e.g., 1910s, 70s, modern), 5) Overall visual atmosphere. Provide a concise technical description (max 50 words) that can be applied to a DIFFERENT subject." }
-            ]
-          }
-        });
-        styleReference = analysisResponse.text?.trim() || styleReference;
+        const apiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
+          console.warn("GEMINI_API_KEY não encontrada. Pulando análise de imagem.");
+        } else {
+          const ai = new GoogleGenAI({ apiKey });
+          const analysisResponse = await ai.models.generateContent({
+            model: "gemini-3-flash-preview",
+            contents: {
+              parts: [
+                { inlineData: { data: referenceImage.data, mimeType: referenceImage.mimeType } },
+                { text: "Analyze the visual style of this image for a cinematic prompt. Focus on: 1) Color grading and palette, 2) Film grain and texture, 3) Saturation levels, 4) Historical era or aesthetic period (e.g., 1910s, 70s, modern), 5) Overall visual atmosphere. Provide a concise technical description (max 50 words) that can be applied to a DIFFERENT subject." }
+              ]
+            }
+          });
+          styleReference = analysisResponse.text?.trim() || styleReference;
+        }
       } catch (error) {
         console.error("Error analyzing image:", error);
       }
@@ -439,9 +450,16 @@ NO TEXT. NO WATERMARK. NO LOGO. CORRECT ANATOMY. NO EXTRA DIGITS. NO PLASTIC HDR
 
   const handleUnfold = async () => {
     if (isUnfolding) return;
+    
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
+      alert("Erro: GEMINI_API_KEY não configurada. Se você estiver no Vercel, adicione esta variável de ambiente nas configurações do projeto.");
+      return;
+    }
+
     setIsUnfolding(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const ai = new GoogleGenAI({ apiKey });
       const systemInstruction = `Você é um diretor de cinema visionário.
 Sua tarefa é analisar o prompt cinematográfico atual e imaginar três sequências lógicas e visualmente impactantes que poderiam seguir essa cena.
 
@@ -483,7 +501,14 @@ Formato de resposta:
     setIsSending(true);
     setState('loading');
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
+        alert("Erro: GEMINI_API_KEY não configurada. Se você estiver no Vercel, adicione esta variável de ambiente nas configurações do projeto.");
+        setState('chat');
+        setIsSending(false);
+        return;
+      }
+      const ai = new GoogleGenAI({ apiKey });
       const systemInstruction = `Você é um assistente técnico de roteiro e direção.
 O usuário quer alterar um prompt cinematográfico existente.
 Sua tarefa é reescrever o prompt incorporando as alterações solicitadas, mantendo a estrutura técnica rigorosa e a consistência visual.
@@ -762,11 +787,16 @@ Mantenha as seções: CAMERA, LENS, LIGHT, SUBJECT, FOREGROUND, MIDGROUND, BACKG
                         <button
                           key={idx}
                           onClick={async () => {
+                            const apiKey = process.env.GEMINI_API_KEY;
+                            if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
+                              alert("Erro: GEMINI_API_KEY não configurada. Se você estiver no Vercel, adicione esta variável de ambiente nas configurações do projeto.");
+                              return;
+                            }
                             setChatInput(`Gere a sequência: ${dir}`);
                             setUnfoldDirections([]);
                             // We trigger the generation immediately
                             setState('loading');
-                            const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+                            const ai = new GoogleGenAI({ apiKey });
                             const response = await ai.models.generateContent({
                               model: "gemini-3-flash-preview",
                               contents: `PROMPT ANTERIOR:\n${generatedPrompt}\n\nGERAR SEQUÊNCIA PRÓXIMA: ${dir}\n\nMantenha consistência total de estilo, color grading e especificações técnicas.`,
