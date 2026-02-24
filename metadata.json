@@ -1,5 +1,5 @@
 {
-  "name": "Cinema Shot - Prompts Cinematográficos",
-  "description": "Crie prompts cinematográficos profissionais para o Nano Banana. Escolha câmera, lente, ângulo e abertura para gerar o prompt perfeito.",
+  "name": "Cinema Shot",
+  "description": "Gerador de prompts cinematográficos profissionais com especificações técnicas de câmeras e lentes.",
   "requestFramePermissions": []
 }
