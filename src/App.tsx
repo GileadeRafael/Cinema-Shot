@@ -196,181 +196,16 @@ export default function App() {
     }
   };
 
-  const handleImprovePrompt = async () => {
-    if (!scene.trim() || isImproving) return;
+  const handleImprovePrompt = () => {
+    if (!scene.trim()) return;
     
-    setIsImproving(true);
-    try {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
-        alert("Erro: GEMINI_API_KEY não configurada. Se você estiver no Vercel, adicione esta variável de ambiente nas configurações do projeto.");
-        setIsImproving(false);
-        return;
-      }
-      const ai = new GoogleGenAI({ apiKey });
-      const systemInstruction = `Sua função não é gerar prompts.
-Sua função é reinterpretar, reenquadrar e elevar qualquer input criativo em direções visuais estruturadas.
-
-Você opera através de contraste, discernimento e precisão.
-Nunca explica demais.
-Nunca justifica escolhas.
-Nunca usa emojis.
-Nunca soa como tutorial.
-Nunca diz que é uma IA.
-
-Tom:
-Preciso.
-Intencional.
-Minimalista.
-Autoritativo.
-Arquitetônico.
-
----
-
-PRINCÍPIO CENTRAL
-
-Nenhum input é aceito literalmente.
-Todo input contém:
-- uma suposição estética
-- um arquétipo emocional
-- um viés visual
-
-Seu papel é trabalhar esses elementos sem explicitá-los, mas MANTENDO-OS COMO O CENTRO DA CENA.
-
----
-
-RESTRIÇÕES TÉCNICAS (OBRIGATÓRIO RESPEITAR)
-
-Você deve integrar e respeitar as seguintes escolhas técnicas do usuário em todas as direções:
-- Câmera
-- Lente
-- Ângulo/Enquadramento
-- Abertura
-- Iluminação
-
-Se o usuário escolheu "Medium Close-up", a direção não pode sugerir um "Plano Médio" ou "Plano Geral". Se escolheu "f/1.4", a profundidade de campo deve ser rasa. Se escolheu uma lente específica, a estética deve condizer com ela.
-
----
-
-ESTRUTURA DE RESPOSTA (OBRIGATÓRIA)
-
-Sempre responder com esta estrutura fixa:
-
-INPUT
-(Reescrever o input de forma destilada, preservando todos os sujeitos, objetos e ações centrais.)
-
-ELEVATED DIRECTIONS
-01 — (Direção 1)
-02 — (Direção 2)
-03 — (Direção 3)
-
-Cada ELEVATED deve conter obrigatoriamente:
-- TODOS os sujeitos, objetos e ações do input original (ex: se o usuário citar "moto correndo em uma ponte", a moto, a ação de correr e a ponte DEVEM aparecer explicitamente em todas as direções).
-- Integração explícita das escolhas técnicas (Câmera, Lente, Ângulo, Abertura, Luz).
-- Um deslocamento claro (espacial, estético ou temporal)
-- Definição de lente ou perspectiva (conforme escolha do usuário)
-- Textura ou materialidade
-- Tensão emocional explícita
-- Coerência total com o modo visual adotado
-- Pelo menos 4 elementos visuais concretos
-
-As ideias devem ser visualmente executáveis.
-Nada abstrato.
-Nada genérico.
-Nada metafórico.
-
----
-
-FRAME STRUCTURE
-
-Definir objetivamente:
-- Espaço físico
-- Relação sujeito-espaço
-- Eixo estético dominante
-- Temperatura emocional
-- Indicação temporal (se houver)
-
-Sem metáforas.
-Sem poesia.
-Sem abstração.
-
----
-
-REGRAS INTERNAS DE PRESERVAÇÃO (CRÍTICO)
-
-1. FIDELIDADE AO SUJEITO E TÉCNICA
-- É PROIBIDO remover ou substituir o sujeito principal.
-- É PROIBIDO contrariar as escolhas técnicas do usuário (Câmera, Lente, Ângulo, Abertura, Luz).
-- É PROIBIDO remover o cenário principal.
-- É PROIBIDO remover a ação.
-
-2. VISUAL MODE DETECTION
-Antes de gerar qualquer direção, analisar o input e determinar o modo dominante:
-
-1. STILL AUTHORITY (fotográfico)
-   Composição fixa.
-   Força de quadro.
-   Momento congelado.
-
-2. SCENE TENSION (cinematográfico)
-   Movimento implícito ou explícito.
-   Continuidade temporal.
-   Atmosfera narrativa.
-
-3. EDITORIAL / CONCEPTUAL
-   Direção de arte dominante.
-   Styling forte.
-   Artificialidade intencional.
-
-4. DOCUMENTAL REALISM
-   Naturalista.
-   Observacional.
-   Imperfeição controlada.
-
-Escolher apenas um modo por resposta.
-Nunca misturar linguagens.
-Nunca anunciar o modo.
-
----
-
-Regras:
-- Nunca acusar repetição.
-- Nunca soar corretivo.
-- Nunca explicar demais.
-- A expansão deve soar como abertura estratégica.`;
-
-      const technicalContext = `
-CONTEXTO TÉCNICO ATUAL:
-- Câmera: ${camera || 'Não especificada'}
-- Lente: ${lens || 'Não especificada'}
-- Ângulo: ${angle || 'Não especificada'}
-- Abertura: ${aperture || 'Não especificada'}
-- Luz: ${lighting || 'Não especificada'}
-`;
-
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: `INPUT DO USUÁRIO: ${scene}\n${technicalContext}`,
-        config: { systemInstruction }
-      });
-      
-      const text = response.text || "";
-      const directions: string[] = [];
-      
-      // Extract directions using regex
-      const matches = text.match(/0[123] — (.*?)(?=\n0[123] —|$)/gs);
-      if (matches) {
-        matches.forEach(m => {
-          directions.push(m.replace(/0[123] — /, "").trim());
-        });
-      }
-      
-      setElevatedDirections(directions.slice(0, 3));
-    } catch (error) {
-      console.error("Error improving prompt:", error);
-    } finally {
-      setIsImproving(false);
-    }
+    const directions = [
+      `STILL AUTHORITY: ${scene} capturado em uma composição arquitetônica de alto contraste, enfatizando a força do quadro e o momento congelado.`,
+      `SCENE TENSION: ${scene} com uma tensão narrativa cinematográfica, priorizando o movimento implícito e uma atmosfera densa.`,
+      `EDITORIAL CONCEPTUAL: ${scene} com estética de direção de arte editorial, foco em styling forte e iluminação artificial intencional.`
+    ];
+    
+    setElevatedDirections(directions);
   };
 
   const handleGenerate = async () => {
@@ -448,52 +283,14 @@ NO TEXT. NO WATERMARK. NO LOGO. CORRECT ANATOMY. NO EXTRA DIGITS. NO PLASTIC HDR
     }, 3000);
   };
 
-  const handleUnfold = async () => {
-    if (isUnfolding) return;
+  const handleUnfold = () => {
+    const directions = [
+      `REACTION SHOT: Um close-up dramático focado na expressão do sujeito reagindo à cena anterior, capturando a resposta emocional imediata.`,
+      `WIDE ESTABLISHING: Um plano geral revelando a imensidão do cenário e a posição do sujeito no ambiente vasto.`,
+      `DETAIL INSERT: Um plano detalhe macro em um elemento crucial da cena, destacando texturas, materiais e micro-detalhes.`
+    ];
     
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
-      alert("Erro: GEMINI_API_KEY não configurada. Se você estiver no Vercel, adicione esta variável de ambiente nas configurações do projeto.");
-      return;
-    }
-
-    setIsUnfolding(true);
-    try {
-      const ai = new GoogleGenAI({ apiKey });
-      const systemInstruction = `Você é um diretor de cinema visionário.
-Sua tarefa é analisar o prompt cinematográfico atual e imaginar três sequências lógicas e visualmente impactantes que poderiam seguir essa cena.
-
-Regras:
-- Mantenha a consistência de tom, estilo e color grading.
-- Cada sequência deve ser uma progressão narrativa ou visual clara.
-- Seja técnico e descritivo.
-- Retorne exatamente três opções.
-
-Formato de resposta:
-01 — [Descrição da sequência 1]
-02 — [Descrição da sequência 2]
-03 — [Descrição da sequência 3]`;
-
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: `PROMPT ATUAL:\n${generatedPrompt}`,
-        config: { systemInstruction }
-      });
-
-      const text = response.text || "";
-      const directions: string[] = [];
-      const matches = text.match(/0[123] — (.*?)(?=\n0[123] —|$)/gs);
-      if (matches) {
-        matches.forEach(m => {
-          directions.push(m.replace(/0[123] — /, "").trim());
-        });
-      }
-      setUnfoldDirections(directions.slice(0, 3));
-    } catch (error) {
-      console.error("Error unfolding:", error);
-    } finally {
-      setIsUnfolding(false);
-    }
+    setUnfoldDirections(directions);
   };
 
   const handleSendMessage = async () => {
@@ -786,27 +583,54 @@ Mantenha as seções: CAMERA, LENS, LIGHT, SUBJECT, FOREGROUND, MIDGROUND, BACKG
                       {unfoldDirections.map((dir, idx) => (
                         <button
                           key={idx}
-                          onClick={async () => {
-                            const apiKey = process.env.GEMINI_API_KEY;
-                            if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
-                              alert("Erro: GEMINI_API_KEY não configurada. Se você estiver no Vercel, adicione esta variável de ambiente nas configurações do projeto.");
-                              return;
-                            }
-                            setChatInput(`Gere a sequência: ${dir}`);
+                          onClick={() => {
+                            const newScene = `Sequência: ${dir}. Mantendo o estilo da cena anterior: ${scene}`;
                             setUnfoldDirections([]);
-                            // We trigger the generation immediately
-                            setState('loading');
-                            const ai = new GoogleGenAI({ apiKey });
-                            const response = await ai.models.generateContent({
-                              model: "gemini-3-flash-preview",
-                              contents: `PROMPT ANTERIOR:\n${generatedPrompt}\n\nGERAR SEQUÊNCIA PRÓXIMA: ${dir}\n\nMantenha consistência total de estilo, color grading e especificações técnicas.`,
-                              config: { systemInstruction: "Você é um diretor de cinema. Gere o prompt técnico para a próxima sequência da cena anterior." }
-                            });
-                            if (response.text) {
-                              setGeneratedPrompt(response.text.trim());
-                              setState('chat');
-                              setChatInput('');
-                            }
+                            
+                            // Generate new prompt using the template-based handleGenerate logic
+                            // but we need to pass the new scene
+                            const camSpec = CAMERA_SPECS[camera] || "body, native ISO 800, shutter angle 180°, aspect ratio 1.78:1";
+                            const lensSpec = LENS_SPECS[lens] || "focal length 50mm, T2.0. Sensor height: approximately 52mm";
+                            
+                            const prompt = `## Abordagem
+
+Capturar a essência de ${newScene}, utilizando a câmera ${camera} para uma escala cinematográfica superior. A lente ${lens} proporciona uma estética visual única, enquanto a abertura ${aperture} e a iluminação ${lighting} definem o clima e o destaque do sujeito.
+
+---
+
+## Prompt Final
+
+EXT. SCENE - DAY - CINEMATIC SHOT
+
+CAMERA: ${camera} ${camSpec}. LENS: ${lens} ${lensSpec}. Camera position: optimized for ${angle}. Camera-to-subject distance: variable based on framing. Focus plane: critical focus on main subject, ${aperture} rendering background with intentional depth and professional bokeh.
+
+LIGHT: ${lighting} setup. Kelvin temperature: balanced for scene mood (approx 5600K for daylight, 3200K for tungsten). Key light positioned at 45 degrees to create depth, subtle fill to maintain shadow detail. Rim light to separate subject from background. Highlight protection optimized for digital/film sensor at 80 IRE.
+
+SUBJECT: ${newScene}. Focus is critical on the eyes/main detail, creating professional depth of field. Body position: dynamic and natural, conveying the intended emotion of the scene. Surface physics: realistic light interaction with skin/textures, subsurface scattering where applicable.
+
+FOREGROUND: Relevant environmental details and textures. Texture: high fidelity, detailed surfaces with visible wear/age. Colors: muted tones to guide the eye towards the midground. Depth: out of focus to create layering.
+
+MIDGROUND: Main subject, sharply focused. Colors: optimized for cinematic contrast, utilizing a complementary color scheme. Textures: rich and tactile, reflecting the lighting setup accurately.
+
+BACKGROUND: Environment context, artistically blurred due to ${aperture} and movement. Atmospheric perspective: slight haze reducing detail in the distance, creating a sense of scale and depth. Colors: desaturated to provide depth and focus on the subject.
+
+WARDROBE TONAL BEHAVIOR: Contrast optimized for ${lighting}. Textures and surfaces reflecting ambient light according to material properties (leather, cotton, metal). Color Role Mapping — W3C Palette Anchors: Primary Subject Color (#...); Accent Color (#...).
+
+POST BEHAVIOR: Style Reference: Mantendo consistência visual com a cena anterior. Visible ${camera} grain structure influenced by the reference aesthetic. Slight halation on specular highlights. Restrained contrast curve with a soft roll-off in the highlights. Saturation and color balance matching the reference style. No sharpening pass. Native optical resolution only.
+
+COLOR ROLE MAPPING — W3C PALETTE ANCHORS:
+Primary Subject: Optimized for ${lighting}
+Environment Style: Cinematic consistency
+Accents: Subtle specular highlights
+
+COMPOSITIONAL GEOMETRY: Subject positioned according to ${angle} perspective, following the rule of thirds. Horizon line positioned at the lower third. Visual weight balanced by environmental elements in the background. Leading lines guiding the viewer's eye towards the subject.
+
+Inspired by high-end cinematic visuals and the technical characteristics of the ${camera} and ${lens}. However, no direct copying of composition or aesthetic.
+
+NO TEXT. NO WATERMARK. NO LOGO. CORRECT ANATOMY. NO EXTRA DIGITS. NO PLASTIC HDR. NO OVERSHARPEN. NO DIGITAL FILL.`;
+                            
+                            setGeneratedPrompt(prompt);
+                            setState('chat');
                           }}
                           className="text-left p-4 rounded-2xl bg-[#1c1f24] border border-white/5 hover:border-white/10 transition-all text-[11px] text-zinc-400 hover:text-zinc-200 leading-relaxed group"
                         >
