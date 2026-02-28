@@ -18,8 +18,6 @@ import {
   RefreshCw,
   Film,
   Edit2,
-  Layers,
-  Sparkles,
   Info
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -197,10 +195,6 @@ export default function App() {
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [isCopied, setIsCopied] = useState(false);
   const [referenceImage, setReferenceImage] = useState<{ data: string, mimeType: string } | null>(null);
-  const [elevatedDirections, setElevatedDirections] = useState<string[]>([]);
-  const [unfoldDirections, setUnfoldDirections] = useState<string[]>([]);
-  const [isImproving, setIsImproving] = useState(false);
-  const [isUnfolding, setIsUnfolding] = useState(false);
   const [chatInput, setChatInput] = useState('');
   const [isSending, setIsSending] = useState(false);
 
@@ -217,18 +211,6 @@ export default function App() {
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const handleImprovePrompt = () => {
-    if (!scene.trim()) return;
-    
-    const directions = [
-      `STILL AUTHORITY: ${scene} em enquadramento estático rigoroso. Geometria brutalista, uso de espaço negativo para isolar o sujeito. Textura de superfície acentuada, luz direcional dura criando sombras gráficas. Estética de fotografia de arte contemporânea.`,
-      `SCENE TENSION: ${scene} sob luz de baixa chave (low-key). Atmosfera carregada de suspense, névoa volumétrica sutil. O sujeito é revelado por frestas de luz, criando um mistério narrativo. Profundidade de campo rasa focando no olhar.`,
-      `EDITORIAL NOIR: ${scene} com direção de arte de alta moda. Cores saturadas mas frias, contraste tonal agressivo. Composição dinâmica e assimétrica. Reflexos especulares em superfícies metálicas ou úmidas, visual ultra-estilizado.`
-    ];
-    
-    setElevatedDirections(directions);
   };
 
   const handleGenerate = async () => {
@@ -304,16 +286,6 @@ NO TEXT. NO WATERMARK. NO LOGO. CORRECT ANATOMY. NO EXTRA DIGITS. NO PLASTIC HDR
       setGeneratedPrompt(prompt);
       setState('chat');
     }, 3000);
-  };
-
-  const handleUnfold = () => {
-    const directions = [
-      `REACTION SHOT (INTERNALITY): Close-up extremo nos olhos do sujeito. A pupila dilata, capturando o reflexo da cena anterior. Micro-expressões faciais revelam uma mudança interna profunda. Foco crítico na íris, pele com textura hiper-realista.`,
-      `WIDE ESTABLISHING (ISOLATION): Plano geral aberto (Extreme Wide Shot). O sujeito torna-se uma silhueta diminuta contra a vastidão do cenário. Perspectiva atmosférica criando camadas de profundidade. O ambiente agora é o protagonista, engolindo a ação anterior.`,
-      `DETAIL INSERT (MATERIALITY): Plano detalhe macro em um objeto ou superfície tocada pelo sujeito. Poeira flutuando em um raio de luz, desgaste do material, impressões digitais. A câmera explora a materialidade do mundo, trazendo uma dimensão tátil à narrativa.`
-    ];
-    
-    setUnfoldDirections(directions);
   };
 
   const handleSendMessage = async () => {
@@ -440,14 +412,6 @@ Mantenha as seções: CAMERA, LENS, LIGHT, SUBJECT, FOREGROUND, MIDGROUND, BACKG
                       </label>
                     </div>
                     <div className="flex items-center gap-3">
-                      <button 
-                        onClick={handleImprovePrompt}
-                        disabled={!scene.trim() || isImproving}
-                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 text-[10px] font-bold text-zinc-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <Sparkles size={12} className={isImproving ? "animate-spin" : ""} />
-                        {isImproving ? "Melhorando..." : "Melhorar Prompt"}
-                      </button>
                       <button
                         onClick={handleGenerate}
                         disabled={!scene.trim()}
@@ -459,43 +423,6 @@ Mantenha as seções: CAMERA, LENS, LIGHT, SUBJECT, FOREGROUND, MIDGROUND, BACKG
                     </div>
                   </div>
                 </div>
-
-                {/* Elevated Directions */}
-                <AnimatePresence>
-                  {elevatedDirections.length > 0 && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="mt-4 flex flex-col gap-2"
-                    >
-                      <div className="flex items-center justify-between px-2">
-                        <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">Elevated Directions</span>
-                        <button 
-                          onClick={() => setElevatedDirections([])}
-                          className="text-[9px] font-bold text-zinc-600 hover:text-zinc-400 uppercase tracking-widest"
-                        >
-                          Limpar
-                        </button>
-                      </div>
-                      <div className="grid grid-cols-1 gap-2">
-                        {elevatedDirections.map((dir, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => {
-                              setScene(dir);
-                              setElevatedDirections([]);
-                            }}
-                            className="text-left p-4 rounded-2xl bg-[#1c1f24] border border-white/5 hover:border-white/10 transition-all text-[11px] text-zinc-400 hover:text-zinc-200 leading-relaxed group"
-                          >
-                            <span className="text-zinc-600 font-bold mr-2">0{idx + 1} —</span>
-                            {dir}
-                          </button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
             </motion.div>
           )}
@@ -564,14 +491,6 @@ Mantenha as seções: CAMERA, LENS, LIGHT, SUBJECT, FOREGROUND, MIDGROUND, BACKG
                       Editar Prompt
                     </button>
                     <button
-                      onClick={handleUnfold}
-                      disabled={isUnfolding}
-                      className="flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-800/50 hover:bg-white hover:text-black transition-all duration-300 text-[10px] font-bold uppercase tracking-widest disabled:opacity-50"
-                    >
-                      <Layers size={12} className={isUnfolding ? "animate-spin" : ""} />
-                      {isUnfolding ? "Desdobrando..." : "Desdobrar Imagem"}
-                    </button>
-                    <button
                       onClick={copyToClipboard}
                       className={`ml-auto flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 text-[10px] font-bold uppercase tracking-widest ${
                         isCopied ? 'bg-white text-black' : 'bg-zinc-800/50 hover:bg-white hover:text-black'
@@ -583,88 +502,6 @@ Mantenha as seções: CAMERA, LENS, LIGHT, SUBJECT, FOREGROUND, MIDGROUND, BACKG
                   </div>
                 </div>
               </div>
-
-              {/* Unfold Directions */}
-              <AnimatePresence>
-                {unfoldDirections.length > 0 && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="flex flex-col gap-2"
-                  >
-                    <div className="flex items-center justify-between px-2">
-                      <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">Sequências Sugeridas</span>
-                      <button 
-                        onClick={() => setUnfoldDirections([])}
-                        className="text-[9px] font-bold text-zinc-600 hover:text-zinc-400 uppercase tracking-widest"
-                      >
-                        Limpar
-                      </button>
-                    </div>
-                    <div className="grid grid-cols-1 gap-2">
-                      {unfoldDirections.map((dir, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => {
-                            const newScene = `Sequência: ${dir}. Mantendo o estilo da cena anterior: ${scene}`;
-                            setUnfoldDirections([]);
-                            
-                            // Generate new prompt using the template-based handleGenerate logic
-                            // but we need to pass the new scene
-                            const camSpec = CAMERA_SPECS[camera] || "body, native ISO 800, shutter angle 180°, aspect ratio 1.78:1";
-                            const lensSpec = LENS_SPECS[lens] || "focal length 50mm, T2.0. Sensor height: approximately 52mm";
-                            
-                            const prompt = `## Abordagem
-
-Capturar a essência de ${newScene}, utilizando a câmera ${camera} para uma escala cinematográfica superior. A lente ${lens} proporciona uma estética visual única, enquanto a abertura ${aperture} e a iluminação ${lighting} definem o clima e o destaque do sujeito.
-
----
-
-## Prompt Final
-
-EXT. SCENE - DAY - CINEMATIC SHOT
-
-CAMERA: ${camera} ${camSpec}. LENS: ${lens} ${lensSpec}. Camera position: optimized for ${angle}. Camera-to-subject distance: variable based on framing. Focus plane: critical focus on main subject, ${aperture} rendering background with intentional depth and professional bokeh.
-
-LIGHT: ${lighting} setup. Kelvin temperature: balanced for scene mood (approx 5600K for daylight, 3200K for tungsten). Key light positioned at 45 degrees to create depth, subtle fill to maintain shadow detail. Rim light to separate subject from background. Highlight protection optimized for digital/film sensor at 80 IRE.
-
-SUBJECT: ${newScene}. Focus is critical on the eyes/main detail, creating professional depth of field. Body position: dynamic and natural, conveying the intended emotion of the scene. Surface physics: realistic light interaction with skin/textures, subsurface scattering where applicable.
-
-FOREGROUND: Relevant environmental details and textures. Texture: high fidelity, detailed surfaces with visible wear/age. Colors: muted tones to guide the eye towards the midground. Depth: out of focus to create layering.
-
-MIDGROUND: Main subject, sharply focused. Colors: optimized for cinematic contrast, utilizing a complementary color scheme. Textures: rich and tactile, reflecting the lighting setup accurately.
-
-BACKGROUND: Environment context, artistically blurred due to ${aperture} and movement. Atmospheric perspective: slight haze reducing detail in the distance, creating a sense of scale and depth. Colors: desaturated to provide depth and focus on the subject.
-
-WARDROBE TONAL BEHAVIOR: Contrast optimized for ${lighting}. Textures and surfaces reflecting ambient light according to material properties (leather, cotton, metal). Color Role Mapping — W3C Palette Anchors: Primary Subject Color (#...); Accent Color (#...).
-
-POST BEHAVIOR: Style Reference: Mantendo consistência visual com a cena anterior. Visible ${camera} grain structure influenced by the reference aesthetic. Slight halation on specular highlights. Restrained contrast curve with a soft roll-off in the highlights. Saturation and color balance matching the reference style. No sharpening pass. Native optical resolution only.
-
-COLOR ROLE MAPPING — W3C PALETTE ANCHORS:
-Primary Subject: Optimized for ${lighting}
-Environment Style: Cinematic consistency
-Accents: Subtle specular highlights
-
-COMPOSITIONAL GEOMETRY: Subject positioned according to ${angle} perspective, following the rule of thirds. Horizon line positioned at the lower third. Visual weight balanced by environmental elements in the background. Leading lines guiding the viewer's eye towards the subject.
-
-Inspired by high-end cinematic visuals and the technical characteristics of the ${camera} and ${lens}. However, no direct copying of composition or aesthetic.
-
-NO TEXT. NO WATERMARK. NO LOGO. CORRECT ANATOMY. NO EXTRA DIGITS. NO PLASTIC HDR. NO OVERSHARPEN. NO DIGITAL FILL.`;
-                            
-                            setGeneratedPrompt(prompt);
-                            setState('chat');
-                          }}
-                          className="text-left p-4 rounded-2xl bg-[#1c1f24] border border-white/5 hover:border-white/10 transition-all text-[11px] text-zinc-400 hover:text-zinc-200 leading-relaxed group"
-                        >
-                          <span className="text-zinc-600 font-bold mr-2">0{idx + 1} —</span>
-                          {dir}
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
 
               {/* Input Bar at bottom */}
               <div className="pt-8">
