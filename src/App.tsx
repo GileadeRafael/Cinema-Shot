@@ -249,33 +249,39 @@ Capturar a essência de ${scene}, utilizando a câmera ${camera} para uma escala
 
 ## Prompt Final
 
-EXT. SCENE - DAY - CINEMATIC SHOT
+SCENE DESCRIPTION: ${scene}
 
-CAMERA: ${camera} ${camSpec}. LENS: ${lens} ${lensSpec}. Camera position: optimized for ${angle}. Camera-to-subject distance: variable based on framing. Focus plane: critical focus on main subject, ${aperture} rendering background with intentional depth and professional bokeh.
+TECHNICAL STYLE & CINEMATOGRAPHY:
+The following technical specifications define the visual aesthetic, color science, and optical characteristics of the image. The camera and equipment themselves are NOT part of the scene and must NOT be visible.
 
-LIGHT: ${lighting} setup. Kelvin temperature: balanced for scene mood (approx 5600K for daylight, 3200K for tungsten). Key light positioned at 45 degrees to create depth, subtle fill to maintain shadow detail. Rim light to separate subject from background. Highlight protection optimized for digital/film sensor at 80 IRE.
+CAMERA: ${camera} ${camSpec}. Utilizing the full dynamic range of the sensor to preserve detail in both deep shadows and bright highlights. Native ISO performance ensures a clean, professional image with organic texture. The aspect ratio and sensor readout provide a true large-format cinematic field of view.
 
-SUBJECT: ${scene}. Focus is critical on the eyes/main detail, creating professional depth of field. Body position: dynamic and natural, conveying the intended emotion of the scene. Surface physics: realistic light interaction with skin/textures, subsurface scattering where applicable.
+LENS: ${lens} ${lensSpec}. Optical rendering characterized by ${aperture} for critical focus and a smooth, natural roll-off into out-of-focus areas. Micro-contrast and edge-to-edge sharpness are optimized, with subtle, pleasing lens flares and controlled chromatic aberration that add to the high-end filmic quality.
 
-FOREGROUND: Relevant environmental details and textures. Texture: high fidelity, detailed surfaces with visible wear/age. Colors: muted tones to guide the eye towards the midground. Depth: out of focus to create layering.
+LIGHTING: ${lighting} configuration. A sophisticated lighting setup utilizing a high-contrast ratio to create depth and dimension. The key light provides a soft yet directional wrap around the subject, while subtle rim lighting separates the subject from the background. Fill light is carefully controlled to maintain a cinematic mood without crushing shadow detail. Kelvin temperature is precisely balanced for the environment.
 
-MIDGROUND: Main subject, sharply focused. Colors: optimized for cinematic contrast, utilizing a complementary color scheme. Textures: rich and tactile, reflecting the lighting setup accurately.
+SUBJECT: ${scene}. The primary focus is on the intricate details and textures of the subject. Skin tones are rendered with natural accuracy, showing realistic subsurface scattering and fine texture. The subject's posture and expression are captured with a sense of narrative weight and emotional resonance, interacting naturally with the environment's lighting.
 
-BACKGROUND: Environment context, artistically blurred due to ${aperture} and movement. Atmospheric perspective: slight haze reducing detail in the distance, creating a sense of scale and depth. Colors: desaturated to provide depth and focus on the subject.
+FOREGROUND: Intentionally out-of-focus elements that provide a sense of scale and physical presence. Textures in the foreground are rich and tactile, with light catching on edges to create a layered, three-dimensional composition. These elements guide the viewer's eye toward the main action.
 
-WARDROBE TONAL BEHAVIOR: Contrast optimized for ${lighting}. Textures and surfaces reflecting ambient light according to material properties (leather, cotton, metal). Color Role Mapping — W3C Palette Anchors: Primary Subject Color (#...); Accent Color (#...).
+MIDGROUND: The area of critical focus where the main subject resides. The interaction between the subject and the immediate environment is rendered with extreme clarity. Color contrast and tonal separation are used to make the subject pop from the surroundings, following a professional cinematic color grade.
 
-POST BEHAVIOR: Style Reference: ${styleReference}. Visible ${camera} grain structure influenced by the reference aesthetic. Slight halation on specular highlights. Restrained contrast curve with a soft roll-off in the highlights. Saturation and color balance matching the reference style. No sharpening pass. Native optical resolution only.
+BACKGROUND: The environment is rendered with a beautiful, creamy bokeh due to the ${lens} at ${aperture}. Atmospheric perspective is used to create a sense of vastness, with distant elements fading into a soft, desaturated haze. The background provides context without distracting from the primary subject.
 
-COLOR ROLE MAPPING — W3C PALETTE ANCHORS:
-Primary Subject: Optimized for ${lighting}
-Environment Style: ${styleReference}
-Accents: Subtle specular highlights
+WARDROBE TONAL BEHAVIOR: Fabric textures and materials are rendered with high fidelity, showing realistic light absorption and reflection. The tonal range of the clothing is optimized for the ${lighting} setup, ensuring that the subject remains the focal point of the composition.
 
-COMPOSITIONAL GEOMETRY: Subject positioned according to ${angle} perspective, following the rule of thirds. Horizon line positioned at the lower third. Visual weight balanced by environmental elements in the background. Leading lines guiding the viewer's eye towards the subject.
+POST-PRODUCTION BEHAVIOR: Style Reference: ${styleReference}. The image emulates a high-end digital intermediate process. Color science is inspired by the ${camera}'s native color space, featuring a soft highlight roll-off and deep, rich blacks. A subtle, organic film grain is applied to enhance the filmic feel. No artificial sharpening or digital artifacts.
 
-Inspired by high-end cinematic visuals and the technical characteristics of the ${camera} and ${lens}. However, no direct copying of composition or aesthetic.
+COLOR ROLE MAPPING:
+- Primary Subject: Optimized for ${lighting} and natural skin tones.
+- Environment: Balanced against the ${styleReference} aesthetic.
+- Accents: Highlights and specular reflections are handled with professional care to avoid clipping.
 
+COMPOSITIONAL GEOMETRY: The frame is meticulously organized according to ${angle} perspective. Utilizing the rule of thirds, leading lines, and balanced visual weight to create a compelling and harmonious image. The horizon line and subject placement are chosen to maximize the narrative impact of the shot.
+
+---
+
+NO CAMERA VISIBLE. NO PHOTOGRAPHER IN SHOT. NO PERSON HOLDING A CAMERA. THE CAMERA IS THE OBSERVER, NOT THE SUBJECT.
 NO TEXT. NO WATERMARK. NO LOGO. CORRECT ANATOMY. NO EXTRA DIGITS. NO PLASTIC HDR. NO OVERSHARPEN. NO DIGITAL FILL.`;
       
       setGeneratedPrompt(prompt);
