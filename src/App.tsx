@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { 
   Camera, 
   Focus, 
@@ -17,7 +17,6 @@ import {
   Check,
   RefreshCw,
   Film,
-  Edit2,
   Info
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -195,10 +194,6 @@ export default function App() {
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [isCopied, setIsCopied] = useState(false);
   const [referenceImage, setReferenceImage] = useState<{ data: string, mimeType: string } | null>(null);
-  const [chatInput, setChatInput] = useState('');
-  const [isSending, setIsSending] = useState(false);
-
-  const bottomInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -286,44 +281,6 @@ NO TEXT. NO WATERMARK. NO LOGO. CORRECT ANATOMY. NO EXTRA DIGITS. NO PLASTIC HDR
       setGeneratedPrompt(prompt);
       setState('chat');
     }, 3000);
-  };
-
-  const handleSendMessage = async () => {
-    if (!chatInput.trim() || isSending) return;
-    setIsSending(true);
-    setState('loading');
-    try {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
-        alert("Erro: GEMINI_API_KEY não configurada. Se você estiver no Vercel, adicione esta variável de ambiente nas configurações do projeto.");
-        setState('chat');
-        setIsSending(false);
-        return;
-      }
-      const ai = new GoogleGenAI({ apiKey });
-      const systemInstruction = `Você é um assistente técnico de roteiro e direção.
-O usuário quer alterar um prompt cinematográfico existente.
-Sua tarefa é reescrever o prompt incorporando as alterações solicitadas, mantendo a estrutura técnica rigorosa e a consistência visual.
-
-Mantenha as seções: CAMERA, LENS, LIGHT, SUBJECT, FOREGROUND, MIDGROUND, BACKGROUND, WARDROBE, POST BEHAVIOR, COLOR ROLE MAPPING, COMPOSITIONAL GEOMETRY.`;
-
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: `PROMPT ORIGINAL:\n${generatedPrompt}\n\nALTERAÇÃO SOLICITADA: ${chatInput}`,
-        config: { systemInstruction }
-      });
-
-      if (response.text) {
-        setGeneratedPrompt(response.text.trim());
-        setChatInput('');
-        setState('chat');
-      }
-    } catch (error) {
-      console.error("Error sending message:", error);
-      setState('chat');
-    } finally {
-      setIsSending(false);
-    }
   };
 
   const copyToClipboard = () => {
@@ -484,15 +441,8 @@ Mantenha as seções: CAMERA, LENS, LIGHT, SUBJECT, FOREGROUND, MIDGROUND, BACKG
                   
                   <div className="flex items-center gap-4 mt-8 pt-8 border-t border-white/5">
                     <button
-                      onClick={() => bottomInputRef.current?.focus()}
-                      className="flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-800/50 hover:bg-white hover:text-black transition-all duration-300 text-[10px] font-bold uppercase tracking-widest"
-                    >
-                      <Edit2 size={12} />
-                      Editar Prompt
-                    </button>
-                    <button
                       onClick={copyToClipboard}
-                      className={`ml-auto flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 text-[10px] font-bold uppercase tracking-widest ${
+                      className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 text-[10px] font-bold uppercase tracking-widest ${
                         isCopied ? 'bg-white text-black' : 'bg-zinc-800/50 hover:bg-white hover:text-black'
                       }`}
                     >
@@ -503,28 +453,14 @@ Mantenha as seções: CAMERA, LENS, LIGHT, SUBJECT, FOREGROUND, MIDGROUND, BACKG
                 </div>
               </div>
 
-              {/* Input Bar at bottom */}
-              <div className="pt-8">
-                <div className="bg-[#1c1f24] border border-white/5 rounded-[2rem] p-4 flex items-center gap-4 shadow-2xl focus-within:border-white/10 transition-all">
-                  <input 
-                    ref={bottomInputRef}
-                    type="text" 
-                    value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="Peça uma alteração no prompt ou escreva algo..." 
-                    className="flex-grow bg-transparent border-none outline-none text-zinc-200 placeholder:text-zinc-700 text-sm ml-4"
-                  />
-                  <button 
-                    onClick={handleSendMessage}
-                    disabled={!chatInput.trim() || isSending}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-                      chatInput.trim() ? 'bg-white text-black hover:bg-zinc-200' : 'bg-zinc-800 text-zinc-600'
-                    }`}
-                  >
-                    <Send size={18} className={isSending ? "animate-spin" : ""} />
-                  </button>
-                </div>
+              {/* New Shot Button */}
+              <div className="pt-8 flex justify-center">
+                <button 
+                  onClick={() => setState('config')}
+                  className="flex items-center gap-2 px-8 py-4 rounded-full bg-white text-black hover:bg-zinc-200 transition-all duration-300 text-sm font-bold shadow-2xl"
+                >
+                  ← Novo shot
+                </button>
               </div>
             </motion.div>
           )}
